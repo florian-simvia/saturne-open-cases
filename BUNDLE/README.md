@@ -12,13 +12,13 @@ The base 2D pattern of the fine mesh contains 100,040 cells, and that of the
 coarse mesh 1,024 cells:
 
 - Single pattern:
-<img src="BUNDLE/REPORT/DESCRIPTION/IMAGES/c016_1.png" width="150">
+<img src="REPORT/DESCRIPTION/IMAGES/c016_1.png" width="150">
 
 - 2 patterns in x and y direction:
-<img src="BUNDLE/REPORT/DESCRIPTION/IMAGES/c016_2.png" width="300">
+<img src="REPORT/DESCRIPTION/IMAGES/c016_2.png" width="300">
 
 - 4 patterns in x and y direction:
-<img src="BUNDLE/REPORT/DESCRIPTION/IMAGES/c016_4.png" width="600">
+<img src="REPORT/DESCRIPTION/IMAGES/c016_4.png" width="600">
 
 This allows building a series of meshes of varying sizes, adapted to weak
 scaling measurement.
