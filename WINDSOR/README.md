@@ -1,9 +1,10 @@
 WINDSOR squareback - code_saturne application case
 ====================================================
 
-This study reproduces the **AutoCFD5 workshop Case 1**: external aerodynamics
+This study reproduces the [**AutoCFD5 workshop Case 1**](https://autocfd.org/case1/): external aerodynamics
 around the Windsor squareback body at 2.5° yaw, in a full-scale virtual
-wind tunnel. It is provided as an end-to-end code_saturne example covering
+wind tunnel. 
+It is provided as an end-to-end code_saturne example covering
 two turbulence-modelling strategies on the same mesh:
 
 - `RANS/` - steady k-ω SST RANS, local time stepping.
@@ -14,7 +15,7 @@ Both cases share the same ~6.3 M-cell mesh `MESH/c1g1.cgns` and the same
 boundary zones. They differ in the turbulence model (k-ω SST vs the same
 model with the DDES shielding function enabled in `cs_user_parameters.cpp`),
 in the time-stepping scheme, and in the post-treatment carried out by
-`cs_user_extra_operations.cpp` (instantaneous coefficients only for RANS;
+`cs_user_extra_operations.cpp` (instantaneous coefficients only for RANS,
 instantaneous + running time-average for DDES).
 
 ![Windsor squareback body with a Q-criterion isosurface of the turbulent wake, rendered from a DDES run of this case.](hero.webp)
@@ -64,8 +65,8 @@ Boundary conditions (set in `DATA/setup.xml`):
 | Roof, Left, Right (`Flow.CFDWT.*`)  | symmetry                         |
 | Windsor_Body, Base, Pins            | no-slip wall                     |
 
-Reference experimental data (Varney, Loughborough NW dataset) is not
-redistributed here; see the AutoCFD5 Case 1 workshop specification for
+Reference experimental data [Varney, Loughborough NW dataset](https://repository.lboro.ac.uk/articles/dataset/Windsor_Body_Experimental_Aerodynamic_Dataset/13161284) is not
+redistributed here; see the [AutoCFD5 Case 1 workshop](https://autocfd.org/case1/) specification for
 details on the experimental setup.
 
 
@@ -131,22 +132,7 @@ turb_model->hybrid_turb = CS_HYBRID_DDES;
 ```
 
 The underlying base model (k-ω SST) is configured in `DATA/setup.xml`,
-identically for both cases; only the hybrid switch differs. This keeps
-the GUI-driven part of the setup interchangeable.
-
-
-Parallelism
------------
-
-`DATA/run.cfg` ships modest defaults so the cases run on a typical
-workstation: 8 MPI ranks for RANS, 16 for DDES (no OpenMP). They can
-be overridden at run time via `code_saturne run -n <procs>` or by
-editing `run.cfg`. The mesh has ~6.3 M cells, so the cases scale
-comfortably to several hundred MPI ranks; on a cluster, raising
-`n_procs` to ~64 (RANS) / ~256 (DDES) is a reasonable target. For
-large rank counts, switching the partitioner away from the default
-Morton SFC to a graph-based scheme (Scotch, ParMETIS) typically pays
-off.
+identically for both cases; only the hybrid switch differs.
 
 
 Repository layout
@@ -173,7 +159,7 @@ WINDSOR/
 References
 ----------
 
-- AutoCFD5 workshop, Case 1 - Windsor squareback at 2.5° yaw.
-- Varney, M. et al., Loughborough NW experimental dataset on the Windsor
+- [AutoCFD5 workshop](https://autocfd.org/case1/), Case 1 - Windsor squareback at 2.5° yaw.
+- [Varney, M. et al.](https://repository.lboro.ac.uk/articles/dataset/Windsor_Body_Experimental_Aerodynamic_Dataset/13161284), Loughborough NW experimental dataset on the Windsor
   body (used as the workshop reference for validation).
-- code_saturne v9.1, EDF R&D, https://code-saturne.org
+- [code_saturne v9.1](https://code-saturne.org), EDF R&D.
