@@ -81,7 +81,7 @@
       </time_average>
     </time_averages>
     <time_parameters>
-      <iterations_add>3000</iterations_add>
+      <iterations>3000</iterations>
       <property name="courant_number" label="CourantNb"/>
       <property name="fourier_number" label="FourierNb"/>
       <time_passing>0</time_passing>
@@ -147,7 +147,6 @@
     <partitioning/>
     <start_restart>
       <frozen_field status="off"/>
-      <restart path="RESTART"/>
       <restart_rescue>500</restart_rescue>
     </start_restart>
   </calculation_management>

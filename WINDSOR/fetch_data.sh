@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 #
-# Fetch the binary data needed to run the WINDSOR case:
-#   - MESH/c1g1.cgns        (~1.2 GB)  computational mesh, ~6.3 M cells
-#   - DDES_G1/RESTART/*.csc (~806 MB)  converged RANS field used as
-#                                       initial condition for the DDES run
+# Fetch the computational mesh needed to run the WINDSOR case:
+#   - MESH/c1g1.cgns  (~1.2 GB)  ~6.3 M cells
 #
-# These files are hosted outside the git repository because of their size.
-# Once downloaded, the case directories are self-contained and can be run
-# with the standard `code_saturne run` workflow.
+# The mesh is hosted outside the git repository because of its size.
+# Once downloaded, the case directories are self-contained and can be
+# run with the standard `code_saturne run` workflow.
 #
 # Usage:
 #   ./fetch_data.sh
@@ -47,8 +45,6 @@ fetch() {
 }
 
 fetch "MESH/c1g1.cgns"
-fetch "DDES_G1/RESTART/main.csc"
-fetch "DDES_G1/RESTART/auxiliary.csc"
 
 echo "Done. You can now run:"
 echo "  code_saturne run --case RANS_G1"

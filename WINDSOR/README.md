@@ -7,8 +7,8 @@ wind tunnel. It is provided as an end-to-end code_saturne example covering
 two turbulence-modelling strategies on the same mesh:
 
 - `RANS_G1/` — steady k-ω SST RANS, local time stepping.
-- `DDES_G1/` — transient SST-DDES hybrid RANS/LES, restarted from a
-  converged RANS field.
+- `DDES_G1/` — transient SST-DDES hybrid RANS/LES, started from a
+  uniform free-stream field.
 
 Both cases share the same ~6.3 M-cell mesh `MESH/c1g1.cgns` and the same
 boundary zones. They differ in the turbulence model (k-ω SST vs the same
@@ -21,13 +21,13 @@ Quick start
 -----------
 
 ```bash
-# 1. Download the mesh and DDES restart field (~2 GB total)
+# 1. Download the mesh (~1.2 GB)
 ./fetch_data.sh
 
 # 2. Run the RANS case
 code_saturne run --case RANS_G1
 
-# 3. Run the DDES case (depends on DDES_G1/RESTART/)
+# 3. Run the DDES case (independent of RANS_G1)
 code_saturne run --case DDES_G1
 ```
 
@@ -86,8 +86,11 @@ default boundary force log. The routine:
    `q_ref · S_ref · L_ref` (moments).
 6. Writes `force_coefficients.csv` in the run directory at every time
    step. For DDES, instantaneous **and** running-mean coefficients are
-   reported, with the time average starting at `t_avg_start = 0.5 s`
-   (~2 flow-through times, after the initial transient).
+   reported, with the time average starting at `t_avg_start = 0.5 s`.
+   This threshold is hard-coded in `cs_user_extra_operations.cpp` and
+   should be adjusted to start after the initial transient has decayed
+   (longer when starting from a uniform field rather than a converged
+   RANS solution).
 
 Reference quantities (`S_ref`, `L_ref`, ρ, ψ) and the probe location are
 hard-coded at the top of `cs_user_extra_operations.cpp` to follow the
@@ -103,8 +106,8 @@ Numerical setup
 |--------------------------|---------------------------|-----------------------------------------------|
 | Turbulence model         | k-ω SST                   | k-ω SST + DDES hybrid (`CS_HYBRID_DDES`)      |
 | Time stepping            | local, ref. dt 1.75e-5 s  | constant, dt = 8e-5 s                         |
-| Iterations               | 3000                      | 3000 (`iterations_add`), restart from RANS    |
-| Initialisation           | reference velocity field  | `DDES_G1/RESTART/` (converged RANS field)     |
+| Iterations               | 3000                      | 3000                                          |
+| Initialisation           | reference velocity field  | uniform free-stream field                     |
 | Convection scheme        | as defined in `setup.xml` | as defined in `setup.xml`                     |
 | Wall treatment           | k-ω SST low-Re (y+ < 1)   | same                                          |
 | Time-averaged fields     | —                         | `mean_velocity` etc. activated in `setup.xml` |
@@ -122,34 +125,13 @@ identically for both cases; only the hybrid switch differs. This keeps
 the GUI-driven part of the setup interchangeable.
 
 
-Computational cost
-------------------
-
-Typical resources used during the AutoCFD5 study (indicative, single
-node unless noted):
-
-| Case      | MPI ranks | OpenMP/rank | Wall time (approx.) |
-|-----------|-----------|-------------|---------------------|
-| RANS_G1   | 28        | 1           | a few hours         |
-| DDES_G1   | 96        | 1           | a few days          |
-
-Defaults in each case's `DATA/run.cfg` reflect these values. They can be
-overridden at run time with `-n <procs>` / `-nt <threads>` or by editing
-`run.cfg`. The mesh is partitioned with the default Morton SFC; for large
-core counts a graph-based partitioner (Scotch, ParMETIS) generally
-performs better.
-
-Memory footprint scales roughly linearly with the number of cells; on
-28 MPI ranks the RANS case fits comfortably in standard 256 GB nodes.
-
-
 Repository layout
 -----------------
 
 ```
 WINDSOR/
 ├── README.md            this file
-├── fetch_data.sh        downloads mesh + DDES restart
+├── fetch_data.sh        downloads the mesh
 ├── MESH/                shared mesh (downloaded, not committed)
 │   ├── README.md
 │   └── c1g1.cgns        ~1.2 GB
@@ -159,10 +141,7 @@ WINDSOR/
 └── DDES_G1/
     ├── DATA/{setup.xml, run.cfg}
     ├── SRC/cs_user_extra_operations.cpp
-    ├── SRC/cs_user_parameters.cpp
-    └── RESTART/         converged RANS field (downloaded, not committed)
-        ├── main.csc
-        └── auxiliary.csc
+    └── SRC/cs_user_parameters.cpp
 ```
 
 
