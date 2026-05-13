@@ -39,7 +39,8 @@ fetch() {
     fi
 }
 
-fetch "meshes/c1g1.cgns" "MESH/c1g1.cgns"
+fetch "meshes/c1g1.cgns" "MESH/c1g1.cgns" \
+      "15c55862c720a1110fe65579e20f6c7cfc506fc2da78c596d46145bd7d5d2bca"
 
 echo "Done. You can now run:"
 echo "  code_saturne run --case RANS"
