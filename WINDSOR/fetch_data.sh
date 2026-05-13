@@ -10,41 +10,36 @@
 # Usage:
 #   ./fetch_data.sh
 #
-# The download URL is configured via the WINDSOR_DATA_URL environment
-# variable, or by editing the DATA_URL variable below.
+# The download base URL is configured via the WINDSOR_DATA_URL
+# environment variable, or by editing the DATA_URL value below.
 
 set -euo pipefail
 
-DATA_URL="${WINDSOR_DATA_URL:-<REPLACE_WITH_HOSTED_URL>}"
+DATA_URL="${WINDSOR_DATA_URL:-https://autocfdv3.s3.eu-west-1.amazonaws.com/test-cases/case1}"
 
 cd "$(dirname "$0")"
 
-if [ "$DATA_URL" = "<REPLACE_WITH_HOSTED_URL>" ]; then
-    echo "ERROR: download URL not set." >&2
-    echo "  Either edit DATA_URL in this script or export WINDSOR_DATA_URL." >&2
-    exit 1
-fi
-
 fetch() {
-    local rel_path="$1"
-    local sha256="${2:-}"
+    local remote_path="$1"
+    local local_path="$2"
+    local sha256="${3:-}"
 
-    if [ -f "$rel_path" ]; then
-        echo "[skip] $rel_path already present"
+    if [ -f "$local_path" ]; then
+        echo "[skip] $local_path already present"
         return
     fi
 
-    mkdir -p "$(dirname "$rel_path")"
-    echo "[get ] $rel_path"
-    curl -fL --progress-bar "$DATA_URL/$rel_path" -o "$rel_path"
+    mkdir -p "$(dirname "$local_path")"
+    echo "[get ] $local_path"
+    curl -fL --progress-bar "$DATA_URL/$remote_path" -o "$local_path"
 
     if [ -n "$sha256" ]; then
         echo "[chk ] verifying sha256"
-        echo "$sha256  $rel_path" | sha256sum -c -
+        echo "$sha256  $local_path" | sha256sum -c -
     fi
 }
 
-fetch "MESH/c1g1.cgns"
+fetch "meshes/c1g1.cgns" "MESH/c1g1.cgns"
 
 echo "Done. You can now run:"
 echo "  code_saturne run --case RANS"
