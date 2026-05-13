@@ -17,6 +17,8 @@ in the time-stepping scheme, and in the post-treatment carried out by
 `cs_user_extra_operations.cpp` (instantaneous coefficients only for RANS;
 instantaneous + running time-average for DDES).
 
+![Windsor squareback body with a Q-criterion isosurface of the turbulent wake, rendered from a DDES run of this case.](hero.webp)
+
 Quick start
 -----------
 
@@ -153,6 +155,7 @@ Repository layout
 ```
 WINDSOR/
 ├── README.md            this file
+├── hero.webp            preview image used by README.md
 ├── fetch_data.sh        downloads the mesh
 ├── MESH/                shared mesh (downloaded, not committed)
 │   ├── README.md
