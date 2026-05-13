@@ -81,7 +81,7 @@
       </time_average>
     </time_averages>
     <time_parameters>
-      <iterations>3000</iterations>
+      <iterations>30000</iterations>
       <property name="courant_number" label="CourantNb"/>
       <property name="fourier_number" label="FourierNb"/>
       <time_passing>0</time_passing>

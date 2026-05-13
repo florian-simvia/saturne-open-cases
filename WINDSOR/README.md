@@ -86,11 +86,19 @@ default boundary force log. The routine:
    `q_ref · S_ref · L_ref` (moments).
 6. Writes `force_coefficients.csv` in the run directory at every time
    step. For DDES, instantaneous **and** running-mean coefficients are
-   reported, with the time average starting at `t_avg_start = 0.5 s`.
-   This threshold is hard-coded in `cs_user_extra_operations.cpp` and
-   should be adjusted to start after the initial transient has decayed
-   (longer when starting from a uniform field rather than a converged
-   RANS solution).
+   reported. The averaging start is expressed in convective times based
+   on the body length, `τ_c = L_body / U∞ ≈ 0.0261 s`:
+
+   ```
+   t_avg_start = n_tau_transient · L_body / U∞
+   ```
+
+   The default `n_tau_transient = 10` (≈ 0.261 s) follows the lower
+   bound of typical bluff-body DDES practice (skip 10–20 τ_c before
+   averaging, accumulate 20+ τ_c of averaging window). With the default
+   `<iterations>30000</iterations>` (≈ 2.4 s ≈ 92 τ_c at dt = 8 × 10⁻⁵ s),
+   the running mean activates around iteration 3 263 and accumulates
+   ~82 τ_c of statistics by the end of the run.
 
 Reference quantities (`S_ref`, `L_ref`, ρ, ψ) and the probe location are
 hard-coded at the top of `cs_user_extra_operations.cpp` to follow the
@@ -106,7 +114,7 @@ Numerical setup
 |--------------------------|---------------------------|-----------------------------------------------|
 | Turbulence model         | k-ω SST                   | k-ω SST + DDES hybrid (`CS_HYBRID_DDES`)      |
 | Time stepping            | local, ref. dt 1.75e-5 s  | constant, dt = 8e-5 s                         |
-| Iterations               | 3000                      | 3000                                          |
+| Iterations               | 3000                      | 30000 (≈ 2.4 s physical, ≈ 92 τ_c)            |
 | Initialisation           | reference velocity field  | uniform free-stream field                     |
 | Convection scheme        | as defined in `setup.xml` | as defined in `setup.xml`                     |
 | Wall treatment           | k-ω SST low-Re (y+ < 1)   | same                                          |

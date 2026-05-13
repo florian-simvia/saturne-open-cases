@@ -32,8 +32,15 @@ cs_user_extra_operations(cs_domain_t  *domain)
   const cs_real_t l_ref = 0.6375;
   const cs_real_t rho   = 1.225;
 
-  /* Time-averaging start time (skip initial transient) */
-  const cs_real_t t_avg_start = 0.5;
+  /* Time-averaging start time (skip initial transient).
+     Expressed in convective times tau_c = L_body / U_inf based on the
+     Windsor body length. Increase n_tau_transient for production runs
+     (typical bluff-body DDES practice: 10-20 tau_c before averaging,
+     20+ tau_c of averaging window). */
+  const cs_real_t l_body = 1.044;          /* Windsor body length [m] */
+  const cs_real_t u_inf  = 40.0;           /* free-stream velocity [m/s] */
+  const cs_real_t n_tau_transient = 10.0;  /* convective times skipped  */
+  const cs_real_t t_avg_start = n_tau_transient * l_body / u_inf;
 
   /* Yaw rotation */
   const cs_real_t yaw_deg = -2.5;
