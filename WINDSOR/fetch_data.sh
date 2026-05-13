@@ -47,5 +47,5 @@ fetch() {
 fetch "MESH/c1g1.cgns"
 
 echo "Done. You can now run:"
-echo "  code_saturne run --case RANS_G1"
-echo "  code_saturne run --case DDES_G1"
+echo "  code_saturne run --case RANS"
+echo "  code_saturne run --case DDES"

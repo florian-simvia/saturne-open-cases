@@ -2,7 +2,7 @@ WINDSOR mesh
 ============
 
 This directory holds the computational mesh `c1g1.cgns` used by both
-`RANS_G1/` and `DDES_G1/`. The mesh is referenced through code_saturne's
+`RANS/` and `DDES/`. The mesh is referenced through code_saturne's
 study-level `MESH/` convention (no explicit path in `setup.xml`).
 
 Mesh characteristics

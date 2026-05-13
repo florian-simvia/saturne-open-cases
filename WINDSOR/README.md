@@ -6,8 +6,8 @@ around the Windsor squareback body at 2.5° yaw, in a full-scale virtual
 wind tunnel. It is provided as an end-to-end code_saturne example covering
 two turbulence-modelling strategies on the same mesh:
 
-- `RANS_G1/` — steady k-ω SST RANS, local time stepping.
-- `DDES_G1/` — transient SST-DDES hybrid RANS/LES, started from a
+- `RANS/` — steady k-ω SST RANS, local time stepping.
+- `DDES/` — transient SST-DDES hybrid RANS/LES, started from a
   uniform free-stream field.
 
 Both cases share the same ~6.3 M-cell mesh `MESH/c1g1.cgns` and the same
@@ -25,10 +25,10 @@ Quick start
 ./fetch_data.sh
 
 # 2. Run the RANS case
-code_saturne run --case RANS_G1
+code_saturne run --case RANS
 
-# 3. Run the DDES case (independent of RANS_G1)
-code_saturne run --case DDES_G1
+# 3. Run the DDES case (independent of RANS)
+code_saturne run --case DDES
 ```
 
 Aerodynamic coefficients are written to
@@ -110,7 +110,7 @@ for the post-processing convention.
 Numerical setup
 ---------------
 
-| Setting                  | RANS_G1                   | DDES_G1                                       |
+| Setting                  | RANS                   | DDES                                       |
 |--------------------------|---------------------------|-----------------------------------------------|
 | Turbulence model         | k-ω SST                   | k-ω SST + DDES hybrid (`CS_HYBRID_DDES`)      |
 | Time stepping            | local, ref. dt 1.75e-5 s  | constant, dt = 8e-5 s                         |
@@ -121,7 +121,7 @@ Numerical setup
 | Time-averaged fields     | —                         | `mean_velocity` etc. activated in `setup.xml` |
 
 The DDES model is enabled programmatically via
-`DDES_G1/SRC/cs_user_parameters.cpp`:
+`DDES/SRC/cs_user_parameters.cpp`:
 
 ```cpp
 cs_turb_model_t *turb_model = cs_get_glob_turb_model();
@@ -143,10 +143,10 @@ WINDSOR/
 ├── MESH/                shared mesh (downloaded, not committed)
 │   ├── README.md
 │   └── c1g1.cgns        ~1.2 GB
-├── RANS_G1/
+├── RANS/
 │   ├── DATA/{setup.xml, run.cfg}
 │   └── SRC/cs_user_extra_operations.cpp
-└── DDES_G1/
+└── DDES/
     ├── DATA/{setup.xml, run.cfg}
     ├── SRC/cs_user_extra_operations.cpp
     └── SRC/cs_user_parameters.cpp
