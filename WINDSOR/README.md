@@ -1,4 +1,4 @@
-WINDSOR squareback — code_saturne application case
+WINDSOR squareback - code_saturne application case
 ====================================================
 
 This study reproduces the **AutoCFD5 workshop Case 1**: external aerodynamics
@@ -6,8 +6,8 @@ around the Windsor squareback body at 2.5° yaw, in a full-scale virtual
 wind tunnel. It is provided as an end-to-end code_saturne example covering
 two turbulence-modelling strategies on the same mesh:
 
-- `RANS/` — steady k-ω SST RANS, local time stepping.
-- `DDES/` — transient SST-DDES hybrid RANS/LES, started from a
+- `RANS/` - steady k-ω SST RANS, local time stepping.
+- `DDES/` - transient SST-DDES hybrid RANS/LES, started from a
   uniform free-stream field.
 
 Both cases share the same ~6.3 M-cell mesh `MESH/c1g1.cgns` and the same
@@ -52,7 +52,7 @@ Physical case
 | Reynolds number (on L_ref)     | ~1.77 × 10⁶                               |
 | Frontal area S_ref             | 0.112 m²                                  |
 | Reference length L_ref         | 0.6375 m (wheelbase, moment reference)    |
-| Moment centre                  | origin (0, 0, 0) — mid-wheelbase, ground  |
+| Moment centre                  | origin (0, 0, 0) - mid-wheelbase, ground  |
 
 Boundary conditions (set in `DATA/setup.xml`):
 
@@ -120,7 +120,7 @@ Numerical setup
 | Initialisation           | reference velocity field  | uniform free-stream field                     |
 | Convection scheme        | as defined in `setup.xml` | as defined in `setup.xml`                     |
 | Wall treatment           | k-ω SST low-Re (y+ < 1)   | same                                          |
-| Time-averaged fields     | —                         | `mean_velocity` etc. activated in `setup.xml` |
+| Time-averaged fields     | -                         | `mean_velocity` etc. activated in `setup.xml` |
 
 The DDES model is enabled programmatically via
 `DDES/SRC/cs_user_parameters.cpp`:
@@ -173,7 +173,7 @@ WINDSOR/
 References
 ----------
 
-- AutoCFD5 workshop, Case 1 — Windsor squareback at 2.5° yaw.
+- AutoCFD5 workshop, Case 1 - Windsor squareback at 2.5° yaw.
 - Varney, M. et al., Loughborough NW experimental dataset on the Windsor
   body (used as the workshop reference for validation).
 - code_saturne v9.1, EDF R&D, https://code-saturne.org
