@@ -13,11 +13,34 @@
  * by the specification (not the inlet boundary condition value).
  *============================================================================*/
 
-/* code_saturne version 9.1 */
+/* VERS */
+
+/*
+  This file is part of code_saturne, a general-purpose CFD tool.
+
+  Copyright (C) 1998-2025 EDF S.A.
+
+  This program is free software; you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free Software
+  Foundation; either version 2 of the License, or (at your option) any later
+  version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details.
+
+  You should have received a copy of the GNU General Public License along with
+  this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
+  Street, Fifth Floor, Boston, MA 02110-1301, USA.
+*/
+
+/*----------------------------------------------------------------------------*/
 
 #include "cs_headers.h"
 
 #include <assert.h>
+#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -94,7 +117,16 @@ cs_user_extra_operations(cs_domain_t  *domain)
     cs_real_t global_min_d2 = local_min_d2;
     cs_parall_min(1, CS_REAL_TYPE, &global_min_d2);
 
-    if (local_min_d2 <= global_min_d2 * (1. + 1e-12)) {
+    /* Unique-owner election: smallest MPI rank among those at the global
+     * minimum. Prevents cs_parall_sum from double-counting when 2+ ranks
+     * are equidistant (typical when the probe lies on the symmetry plane). */
+    int candidate_rank = INT_MAX;
+    if (local_min_d2 <= global_min_d2 * (1. + 1e-12))
+      candidate_rank = cs_glob_rank_id;
+
+    cs_parall_min(1, CS_INT_TYPE, &candidate_rank);
+
+    if (cs_glob_rank_id == candidate_rank) {
       s_ref_cell = local_best;
       s_is_owner = 1;
     }
