@@ -133,6 +133,20 @@ identically for both cases; only the hybrid switch differs. This keeps
 the GUI-driven part of the setup interchangeable.
 
 
+Parallelism
+-----------
+
+`DATA/run.cfg` ships modest defaults so the cases run on a typical
+workstation: 8 MPI ranks for RANS, 16 for DDES (no OpenMP). They can
+be overridden at run time via `code_saturne run -n <procs>` or by
+editing `run.cfg`. The mesh has ~6.3 M cells, so the cases scale
+comfortably to several hundred MPI ranks; on a cluster, raising
+`n_procs` to ~64 (RANS) / ~256 (DDES) is a reasonable target. For
+large rank counts, switching the partitioner away from the default
+Morton SFC to a graph-based scheme (Scotch, ParMETIS) typically pays
+off.
+
+
 Repository layout
 -----------------
 
